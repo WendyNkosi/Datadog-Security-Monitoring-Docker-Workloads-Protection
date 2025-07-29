@@ -1,0 +1,16 @@
+[34m
+* Datadog Agent 7 install script v1.39.0
+[0m
+[31mYour OS or distribution are not supported by this install script.
+Please follow the instructions on the Agent setup page:
+
+https://app.datadoghq.com/account/settings/agent/latest?platform=overview[0m
+curl: (22) The requested URL returned error: 403
+Unable to send telemetry
+environment: line 455: lsb_release: command not found
+environment: line 488: lsb_release: command not found
+curl: (22) The requested URL returned error: 403
+Unable to send logs telemetry\n
+curl: (22) The requested URL returned error: 403
+Unable to send trace telemetry\n
+Sudo is disabled on this machine. To enable it, go to the ]8;;ms-settings:developers\Developer Settings page]8;;\ in the Settings app

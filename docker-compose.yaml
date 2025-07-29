@@ -1,0 +1,70 @@
+services:
+  todo-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: todo-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - DD_AGENT_HOST=dd-agent
+      - DD_TRACE_AGENT_PORT=8126
+      - DD_ENV=dev
+      - DD_SERVICE=todo-api
+      - DD_VERSION=1.0.0
+      - DD_LOGS_INJECTION=true
+      - DD_RUNTIME_METRICS_ENABLED=true
+      - DD_RUNTIME_SECURITY_CONFIG_ENABLED=true
+      - DD_RUNTIME_SECURITY_CONFIG_REMOTE_CONFIGURATION_ENABLED=true
+    depends_on:
+      - dd-agent
+    ports:
+      - "8080:8080"
+    networks:
+      - monitoring
+
+  dd-agent:
+    image: gcr.io/datadoghq/agent:7.63.3
+    container_name: dd-agent
+    environment:
+      - DD_API_KEY=c52063af115e52286601d39f9ad604fa
+      - DD_SITE=datadoghq.eu
+      - DD_DOGSTATSD_NON_LOCAL_TRAFFIC=true
+      - DD_APM_ENABLED=true
+      - DD_APM_NON_LOCAL_TRAFFIC=true
+      - DD_LOGS_ENABLED=true
+      - DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true
+      - DD_RUNTIME_METRICS_ENABLED=true
+      - DD_RUNTIME_SECURITY_CONFIG_ENABLED=true
+      - DD_RUNTIME_SECURITY_CONFIG_REMOTE_CONFIGURATION_ENABLED=true
+      - DD_COMPLIANCE_CONFIG_ENABLED=true
+      - DD_COMPLIANCE_CONFIG_HOST_BENCHMARKS_ENABLED=true
+      - HOST_ROOT=/host/root
+      - DD_SYSTEM_PROBE_ENABLED=false
+    pid: "host"
+    # cgroupns: "host"
+    security_opt:
+      - apparmor:unconfined
+    cap_add:
+      - SYS_ADMIN
+      - SYS_RESOURCE
+      - SYS_PTRACE
+      - NET_ADMIN
+      - NET_BROADCAST
+      - NET_RAW
+      - IPC_LOCK
+      - CHOWN
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /:/host/root:ro
+      - /sys/kernel/debug:/sys/kernel/debug
+      - /etc/os-release:/etc/os-release
+    networks:
+      - monitoring
+
+networks:
+  monitoring:
+    driver: bridge
