@@ -7,6 +7,10 @@ RUN dotnet publish "TodoApi.csproj" -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-noble AS runtime
 WORKDIR /app
+# Install packages for user management (for security testing)
+RUN apt-get update && \
+    apt-get install -y sudo passwd adduser && \
+    rm -rf /var/lib/apt/lists/*
 COPY --from=build /app/publish . 
 
 # Datadog environment variables
