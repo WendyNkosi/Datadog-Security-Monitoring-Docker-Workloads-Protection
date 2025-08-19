@@ -8,7 +8,7 @@ RUN dotnet publish "TodoApi.csproj" -c Release -o /app/publish
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS runtime
 WORKDIR /app
 RUN apk update \
-  && apk add --no-cache curl tar \
+  && apk add --no-cache curl tar bash shadow sudo \
   && rm -rf /var/cache/apk/* \
   && mkdir /opt/datadog \
   && TRACER_VERSION="3.6.1" \
