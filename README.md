@@ -7,7 +7,7 @@
 
 
 - build the application image <br>
-`docker build -t todo-api .`
+`docker build -f alp.Dockerfile -t todo-api-alp .`
 
 - create the cws volume<br>
 `docker run --rm   --name cws-instrumentation-init   -v cws-instrumentation:/cws-instrumentation-volume   -u 0   datadog/cws-instrumentation:7.63.1   /cws-instrumentation setup --cws-volume-mount /cws-instrumentation-volume`
