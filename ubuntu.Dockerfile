@@ -5,8 +5,7 @@ RUN dotnet restore "TodoApi.csproj"
 COPY . .
 RUN dotnet publish "TodoApi.csproj" -c Release -o /app/publish
 
-# FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
-FROM ubuntu:22.04
+FROM ubuntu:latest AS runtime
 WORKDIR /app
 # Install dependencies and Datadog .NET Tracer
 RUN TRACER_VERSION=3.10.0 \
@@ -46,5 +45,4 @@ ENV DD_PROFILING_WALLTIME_ENABLED=true
 
 EXPOSE 8080
 
-# ENTRYPOINT ["dotnet", "TodoApi.dll", "--server.urls", "http://+:8080"]
-ENTRYPOINT [ "/usr/bin/bash", "-c", "apt update;apt install -y curl; while true; do curl https://google.com; sleep 5; done" ]
+ENTRYPOINT ["/cws-instrumentation-volume/cws-instrumentation", "trace", "--verbose", "--", "/usr/bin/bash", "-c", "apt update;apt install -y curl; while true; do curl https://google.com; sleep 5; done"]

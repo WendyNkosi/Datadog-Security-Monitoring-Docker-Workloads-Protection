@@ -1,49 +1,19 @@
 services:
-  todo-api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: todo-api
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - DD_AGENT_HOST=dd-agent
-      - DD_TRACE_AGENT_PORT=8126
-      - DD_ENV=dev
-      - DD_SERVICE=todo-api
-      - DD_VERSION=1.0.0
-      - DD_LOGS_INJECTION=true
-      - DD_RUNTIME_METRICS_ENABLED=true
-      - DD_RUNTIME_SECURITY_CONFIG_ENABLED=true
-      - DD_RUNTIME_SECURITY_CONFIG_REMOTE_CONFIGURATION_ENABLED=true
-    depends_on:
-      - dd-agent
-    ports:
-      - "8080:8080"
-    networks:
-      - monitoring
-
+  # Datadog Agent
   dd-agent:
     image: gcr.io/datadoghq/agent:7.63.3
     container_name: dd-agent
-    environment:
-      - DD_API_KEY=c52063af115e52286601d39f9ad604fa
-      - DD_SITE=datadoghq.eu
-      - DD_DOGSTATSD_NON_LOCAL_TRAFFIC=true
-      - DD_APM_ENABLED=true
-      - DD_APM_NON_LOCAL_TRAFFIC=true
-      - DD_LOGS_ENABLED=true
-      - DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true
-      - DD_RUNTIME_METRICS_ENABLED=true
-      - DD_RUNTIME_SECURITY_CONFIG_ENABLED=true
-      - DD_RUNTIME_SECURITY_CONFIG_REMOTE_CONFIGURATION_ENABLED=true
-      - DD_COMPLIANCE_CONFIG_ENABLED=true
-      - DD_COMPLIANCE_CONFIG_HOST_BENCHMARKS_ENABLED=true
-      - HOST_ROOT=/host/root
-      - DD_SYSTEM_PROBE_ENABLED=false
+    healthcheck:
+      test: ["CMD-SHELL", "/probe.sh"]
+      interval: 30s
+      timeout: 5s
+      retries: 2
+      start_period: 60s
+    restart: unless-stopped
     pid: "host"
-    # cgroupns: "host"
+    #cgroupns_mode: host
     security_opt:
-      - apparmor:unconfined
+     - apparmor:unconfined
     cap_add:
       - SYS_ADMIN
       - SYS_RESOURCE
@@ -53,6 +23,14 @@ services:
       - NET_RAW
       - IPC_LOCK
       - CHOWN
+    environment:
+      - DD_API_KEY=9d3e1546a6b853b40daf234d9f8fcaf1
+      - DD_SITE=datadoghq.eu
+      - DD_COMPLIANCE_CONFIG_ENABLED=true
+      - DD_COMPLIANCE_CONFIG_HOST_BENCHMARKS_ENABLED=true
+      - DD_RUNTIME_SECURITY_CONFIG_ENABLED=true
+      - DD_RUNTIME_SECURITY_CONFIG_REMOTE_CONFIGURATION_ENABLED=true
+      - HOST_ROOT=/host/root
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /proc/:/host/proc/:ro
@@ -62,9 +40,52 @@ services:
       - /:/host/root:ro
       - /sys/kernel/debug:/sys/kernel/debug
       - /etc/os-release:/etc/os-release
+      - ./system-probe.yaml:/etc/datadog-agent/system-probe.yaml:ro
+  cws-instrumentation-init:
+    image: datadog/cws-instrumentation:7.63.1
+    container_name: cws-instrumentation-init
+    command: ["/cws-instrumentation", "setup", "--cws-volume-mount", "/cws-instrumentation-volume"]
+    volumes:
+      - cws-instrumentation:/cws-instrumentation-volume
+    user: "0"
+    networks:
+      - monitoring
+
+  # .NET app container (Ubuntu example)
+  todo-api-ubuntu:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: todo-api-ubuntu
+    environment:
+      - DD_AGENT_HOST=dd-agent
+      - DD_TRACE_AGENT_PORT=8126
+      - DD_ENV=dev
+      - DD_SERVICE=todo-api
+      - DD_VERSION=1.0.0
+      - DD_LOGS_INJECTION=true
+      - DD_RUNTIME_METRICS_ENABLED=true
+      - DD_RUNTIME_SECURITY_CONFIG_ENABLED=true
+      - DD_RUNTIME_SECURITY_CONFIG_REMOTE_CONFIGURATION_ENABLED=true
+      - DD_API_KEY=9d3e1546a6b853b40daf234d9f8fcaf1
+    depends_on:
+      - dd-agent
+      - cws-instrumentation-init
+    ports:
+      - "8080:8080"
+    cap_add:
+      - SYS_PTRACE
+    init: true
+    volumes:
+      - cws-instrumentation:/cws-instrumentation-volume:ro
     networks:
       - monitoring
 
 networks:
   monitoring:
     driver: bridge
+
+volumes:
+  cws-instrumentation:
+
+
