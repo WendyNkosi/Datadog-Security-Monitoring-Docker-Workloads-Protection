@@ -25,6 +25,7 @@ RUN TRACER_VERSION=3.10.0 \
     && apt-get clean \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
+    
 COPY --from=build /app/publish . 
 
 # Datadog environment variables
