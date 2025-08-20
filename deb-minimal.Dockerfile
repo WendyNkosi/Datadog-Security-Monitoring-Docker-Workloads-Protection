@@ -16,6 +16,7 @@ RUN TRACER_VERSION=3.10.0 \
         wget \
         curl \
         sudo \
+        bash \
         strace \
         ca-certificates \
     && curl -LO https://github.com/DataDog/dd-trace-dotnet/releases/download/v${TRACER_VERSION}/datadog-dotnet-apm_${TRACER_VERSION}_amd64.deb \
