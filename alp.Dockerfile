@@ -8,8 +8,7 @@ RUN dotnet publish "TodoApi.csproj" -c Release -o /app/publish
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS runtime
 WORKDIR /app
 RUN apk update \
-  && apk add --no-cache curl tar bash shadow sudo \
-  && rm -rf /var/cache/apk/* \
+  && apk add --no-cache curl tar bash shadow sudo strace \
   && mkdir /opt/datadog \
   && TRACER_VERSION="3.6.1" \
   && curl -L https://github.com/Datadog/dd-trace-dotnet/releases/download/v${TRACER_VERSION}/datadog-dotnet-apm-${TRACER_VERSION}-musl.tar.gz \
@@ -33,7 +32,7 @@ ENV DD_PROFILING_GC_ENABLED=true
 ENV DD_PROFILING_HEAP_ENABLED=true
 ENV DD_PROFILING_WALLTIME_ENABLED=true
 ENV DD_PROFILING_EXCEPTION_ENABLED=true
-ENV LD_PRELOAD=/opt/datadog/continuousprofiler/Datadog.Linux.ApiWrapper.x64.so
+#ENV LD_PRELOAD=/opt/datadog/continuousprofiler/Datadog.Linux.ApiWrapper.x64.so
 
 EXPOSE 8080
 
