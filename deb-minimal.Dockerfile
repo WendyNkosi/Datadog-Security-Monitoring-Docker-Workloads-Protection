@@ -23,7 +23,7 @@ RUN TRACER_VERSION=3.10.0 \
     && dpkg -i ./datadog-dotnet-apm_${TRACER_VERSION}_amd64.deb \
     && rm ./datadog-dotnet-apm_${TRACER_VERSION}_amd64.deb \
     && apt-get clean \
-    && apt-get autoremove -y \
+    && apt-get autoremove -y 
     
 # Copy app and Datadog tracer
 COPY --from=build /app/publish . 
