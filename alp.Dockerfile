@@ -32,7 +32,7 @@ ENV DD_PROFILING_GC_ENABLED=true
 ENV DD_PROFILING_HEAP_ENABLED=true
 ENV DD_PROFILING_WALLTIME_ENABLED=true
 ENV DD_PROFILING_EXCEPTION_ENABLED=true
-#ENV LD_PRELOAD=/opt/datadog/continuousprofiler/Datadog.Linux.ApiWrapper.x64.so
+ENV LD_PRELOAD=/opt/datadog/continuousprofiler/Datadog.Linux.ApiWrapper.x64.so
 
 EXPOSE 8080
 
