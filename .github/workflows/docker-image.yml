@@ -53,5 +53,22 @@ jobs:
        push: true
        tags: wendynkosi/todo-api:ubuntu-traced
 
+
+    - name: Build and push the minimal alpine image to dockerhub
+      uses: docker/build-push-action@v5
+      with:
+       context: .
+       file: ./alp-minimal.Dockerfile
+       push: true
+       tags: wendynkosi/todo-api:alpine-minimal
+
+    - name: Build and push the traced alpine image to dockerhub
+      uses: docker/build-push-action@v5
+      with:
+       context: .
+       file: ./alp.Dockerfile
+       push: true
+       tags: wendynkosi/todo-api:alpine-traced
+
     
     
