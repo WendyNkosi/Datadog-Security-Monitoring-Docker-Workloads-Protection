@@ -8,8 +8,7 @@ RUN dotnet publish "TodoApi.csproj" -c Release -o /app/publish
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS runtime
 WORKDIR /app
 RUN apk update \
-  && apk add --no-cache curl tar bash shadow sudo strace \
-  && adduser -D testuser && echo "testuser:Password123!" | chpasswd
+  && apk add --no-cache curl tar bash shadow sudo strace 
 
 
 COPY --from=build /app/publish . 
