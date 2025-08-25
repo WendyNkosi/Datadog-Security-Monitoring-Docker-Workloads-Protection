@@ -15,4 +15,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      run: docker build . --file deb-minimal.Dockerfile --tag todo-api-deb-minimal:$(date +%s)
+    - name: Push the Docker image
+      run: docker push todo-api:$(date +%s)
