@@ -20,17 +20,14 @@ jobs:
       with:
        username: ${{ secrets.DOCKER_USERNAME }}
        password: ${{ secrets.DOCKER_TOKEN }}
-       
-    # - name: Build the minimal Docker image
-    #   run: docker build . --file deb-minimal.Dockerfile --tag todo-api-deb-minimal:$(date +%s)
       
-    - name: Build and push to dockerhub
+    - name: Build and push the minimal image to dockerhub
       uses: docker/build-push-action@v5
       with:
        context: .
-       file: deb-minimal.Dockerfile
+       files: deb-minimal.Dockerfile
        push: true
-       tags: todo-api-deb-mininal:latest
+       tags: wendynkosi/todo-api:deb-minimal
 
     
     
