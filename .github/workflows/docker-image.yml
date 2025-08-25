@@ -27,8 +27,8 @@ jobs:
     - name: Build and push to dockerhub
       uses: docker/build-push-action@v5
       with:
-       context: ./
-       dockerfile: deb-minimal.Dockerfile
+       context: .
+       file: deb-minimal.Dockerfile
        push: true
        tags: todo-api-deb-mininal:latest
 
