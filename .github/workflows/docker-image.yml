@@ -14,7 +14,23 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file deb-minimal.Dockerfile --tag todo-api-deb-minimal:$(date +%s)
-    - name: Push the Docker image
-      run: docker push todo-api:$(date +%s)
+    
+    - name: Login to dockerhub
+      uses: docker/login-action@v3
+      with:
+       username: ${{ secrets.DOCKER_USERNAME }}
+       password: ${{ secrets.DOCKER_TOKEN }}
+       
+    # - name: Build the minimal Docker image
+    #   run: docker build . --file deb-minimal.Dockerfile --tag todo-api-deb-minimal:$(date +%s)
+      
+    - name: Build and push to dockerhub
+      uses: docker/build-push-action@v5
+      with:
+       context: .
+       dockerfile: deb-minimal.Dockerfile
+       push: true
+       tags: todo-api-deb-mininal:latest
+
+    
+    
