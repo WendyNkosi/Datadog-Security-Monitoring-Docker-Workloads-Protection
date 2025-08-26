@@ -8,7 +8,7 @@ RUN dotnet publish "TodoApi.csproj" -c Release -o /app/publish
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 # Install dependencies and Datadog .NET Tracer
-RUN TRACER_VERSION=3.10.0 \
+RUN TRACER_VERSION=3.23.0 \
     && apt-get update \
     && apt-get --no-install-recommends install -y \
         build-essential \
