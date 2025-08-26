@@ -19,5 +19,9 @@
 
 - **exec into container and trigger an event**<br>
 `docker exec -it todo-api-deb-traced bash`<br>
-`touch /tmp/myfile.txt && chmod +x /tmp/myfile.txt`
+`touch /tmp/myfile.txt && chmod +x /tmp/myfile.txt`<br>
+`useradd wendy && passwd wendy`
+
+- **check tracing works when APM is enabled**<br>
+`curl -X GET http://localhost:8080/api/healthcheck`
 
