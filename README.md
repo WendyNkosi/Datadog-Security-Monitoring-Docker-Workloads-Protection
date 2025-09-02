@@ -32,10 +32,7 @@ counter=1
 while true; do
   username="user$counter"
   password="pass$counter"
-
-  # HIGH-RISK: will actually create a system user
   sudo useradd -m -p $(openssl passwd -1 "$password") "$username"
-  
   echo "Created user $username with password $password"
   ((counter++))
 done
