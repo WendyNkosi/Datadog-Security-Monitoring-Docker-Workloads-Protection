@@ -25,7 +25,7 @@
 - **check tracing works when APM is enabled**<br>
 `curl -X GET http://localhost:8080/api/healthcheck`
 
-- **Test script**
+- **Test script**<br>
 `#!/bin/bash
 counter=1
 while true; do
