@@ -25,3 +25,17 @@
 - **check tracing works when APM is enabled**<br>
 `curl -X GET http://localhost:8080/api/healthcheck`
 
+- **Test script**
+`#!/bin/bash
+counter=1
+while true; do
+  username="user$counter"
+  password="pass$counter"
+
+  # HIGH-RISK: will actually create a system user
+  sudo useradd -m -p $(openssl passwd -1 "$password") "$username"
+  
+  echo "Created user $username with password $password"
+  ((counter++))
+done`
+
