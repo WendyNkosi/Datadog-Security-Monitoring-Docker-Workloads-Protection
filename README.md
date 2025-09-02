@@ -26,7 +26,8 @@
 `curl -X GET http://localhost:8080/api/healthcheck`
 
 - **Test script**<br>
-`#!/bin/bash
+`
+#!/bin/bash
 counter=1
 while true; do
   username="user$counter"
@@ -37,5 +38,6 @@ while true; do
   
   echo "Created user $username with password $password"
   ((counter++))
-done`
+done
+`
 
