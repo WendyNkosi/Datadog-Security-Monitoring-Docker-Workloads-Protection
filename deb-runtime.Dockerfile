@@ -38,4 +38,8 @@ ENV DD_PROFILING_HEAP_ENABLED=true
 ENV DD_PROFILING_WALLTIME_ENABLED=true
 EXPOSE 8080
 
+# Create a non-root user
+RUN useradd -m -s /bin/bash appuser
+USER appuser
+
 ENTRYPOINT ["/cws-instrumentation-volume/cws-instrumentation", "trace", "--verbose", "--", "dotnet", "TodoApi.dll"]
