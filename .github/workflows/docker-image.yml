@@ -78,7 +78,7 @@ jobs:
         
 # Restore, build, and publish
     - name: Publish .NET app
-      run: dotnet publish ./TodoApi/TodoApi.csproj -c Release -o ./publish
+      run: dotnet publish ./TodoApi.csproj -c Release -o ./publish
       
     - name: Build and push the runtime debian image to dockerhub
       uses: docker/build-push-action@v5
