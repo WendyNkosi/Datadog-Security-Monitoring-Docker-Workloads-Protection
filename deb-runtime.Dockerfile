@@ -16,6 +16,9 @@ RUN TRACER_VERSION=3.23.0 \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/* 
 
+# Copy artefacts (.dll)
+COPY ./publish ./
+
 # Datadog environment variables
 ENV ASPNETCORE_ENVIRONMENT=Development
 # Datadog environment variables
