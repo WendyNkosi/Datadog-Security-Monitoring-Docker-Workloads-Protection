@@ -43,6 +43,5 @@ ENV DD_PROFILING_GC_ENABLED=true
 ENV DD_PROFILING_HEAP_ENABLED=true
 ENV DD_PROFILING_WALLTIME_ENABLED=true
 EXPOSE 8080
-USER root
 
 ENTRYPOINT ["/cws-instrumentation-volume/cws-instrumentation", "trace", "--verbose", "--", "dotnet", "TodoApi.dll"]
