@@ -35,7 +35,7 @@ jobs:
        context: .
        file: ./deb.Dockerfile
        push: true
-       tags: wendynkosi/todo-api:deb-traced
+       tags: wendynkosi/todo-api:deb-root-user
 
     - name: Build and push the minimal ubuntu image to dockerhub
       uses: docker/build-push-action@v5
@@ -86,7 +86,7 @@ jobs:
        context: .
        file: ./deb-runtime.Dockerfile
        push: true
-       tags: wendynkosi/todo-api:deb-runtime
+       tags: wendynkosi/todo-api:deb-nonroot-user
 
     
     
