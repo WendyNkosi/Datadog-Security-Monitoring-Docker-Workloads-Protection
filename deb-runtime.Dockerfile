@@ -16,6 +16,9 @@ RUN TRACER_VERSION=3.23.0 \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/* 
 
+RUN apt update && \
+    apt -y install sudo
+
 # Copy artefacts (.dll)
 COPY ./publish ./
 
@@ -38,8 +41,12 @@ ENV DD_PROFILING_HEAP_ENABLED=true
 ENV DD_PROFILING_WALLTIME_ENABLED=true
 EXPOSE 8080
 
-# Create a non-root user
-RUN useradd -m -s /bin/bash appuser
+# Create a non-root user and give sudo permissions
+ENV user appuser
+RUN useradd -m -d /home/${user} ${user} && \
+    chown -R ${user} /home/${user} && \
+    adduser ${user} sudo && \
+    echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 USER appuser
 
 ENTRYPOINT ["/cws-instrumentation-volume/cws-instrumentation", "trace", "--verbose", "--", "dotnet", "TodoApi.dll"]
