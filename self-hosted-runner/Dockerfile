@@ -4,7 +4,7 @@ WORKDIR /home/runner
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG DEBCONF_NONINTERACTIVE_SEEN=true
-ARG NODE_JS_VERSION=16
+ARG NODE_JS_VERSION=24
 
 RUN apt-get update -y \
     && apt-get install -y --no-install-recommends \
