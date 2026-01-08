@@ -88,5 +88,15 @@ jobs:
        push: true
        tags: wendynkosi/todo-api:deb-nonroot-user
 
+
+# Build and push self-hosted runner image  
+    - name: Build and push the self hosted runner image to dockerhub
+      uses: docker/build-push-action@v5
+      with:
+       context: ./self-hosted-runner
+       file: ./Dockerfile
+       push: true
+       tags: wendynkosi/todo-api:runner
+
     
     
