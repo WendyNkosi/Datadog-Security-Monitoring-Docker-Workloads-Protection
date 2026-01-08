@@ -1,11 +1,15 @@
-FROM ubuntu:22.04 as base
-# Avoid prompts from apt
-ENV DEBIAN_FRONTEND=noninteractive
+FROM ubuntu:focal as base
+
 WORKDIR /home/runner
 
-# Install comprehensive dependencies
-RUN apt update -y \
-    && apt install -y --no-install-recommends\
+ARG DEBIAN_FRONTEND=noninteractive
+ARG DEBCONF_NONINTERACTIVE_SEEN=true
+ARG NODE_JS_VERSION=16
+
+RUN echo "tzdata tzdata/Areas select Europe\ntzdata tzdata/Zones/Europe select Berlin" > /preseed.txt \
+    && debconf-set-selections /preseed.txt \
+    && apt-get update -y \
+    && apt-get install -y --no-install-recommends \
         curl \
         jq \
         ca-certificates \
@@ -37,12 +41,16 @@ RUN apt update -y \
         libxtst6 \
         xauth \
         xvfb \
+    && curl -fsSL https://deb.nodesource.com/setup_${NODE_JS_VERSION}.x | bash - \
+    && apt-get install -y --no-install-recommends nodejs \
+    && npm i --location=global npm@latest \
+    && npm i --location=global corepack \
+    && corepack enable \
     && apt-get autoremove -y \
     && apt-get autoclean -y \ 
     && rm -rf /var/lib/apt/lists/*
 
-
-FROM base as arch-base
+FROM base as cloud-base
 
 ARG VAULT_VERSION=1.8.5
 
@@ -63,7 +71,9 @@ RUN if [ "$(uname -m)" = "x86_64" ]; then \
     && rm -rf ./aws awscliv2.zip \
     && aws --version
 
-FROM arch-base as runner-base
+FROM cloud-base as runner-base
+
+ARG RUNNER_VERSION=2.295.0
 ARG DEBIAN_FRONTEND=noninteractive
 ARG DEBCONF_NONINTERACTIVE_SEEN=true
 
@@ -85,7 +95,8 @@ RUN apt-get update -y \
     && cat ./bin/installdependencies.sh \
     && ./bin/installdependencies.sh \
     && rm -rf /var/lib/apt/lists/*
-    
+
+COPY health-check /usr/bin/
 COPY start.sh .
 
 USER runner
@@ -97,6 +108,7 @@ ENTRYPOINT ["/home/runner/start.sh"]
 FROM runner-base as docker-runner-base
 
 USER root
+
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg \
     && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null \
     && apt-get update -y \
