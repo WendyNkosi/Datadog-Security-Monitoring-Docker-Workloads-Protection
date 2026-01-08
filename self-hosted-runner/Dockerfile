@@ -99,6 +99,7 @@ RUN apt-get update -y \
     && rm -rf /var/lib/apt/lists/*
 
 COPY start.sh .
+RUN chmod +x start.sh
 
 USER runner
 
