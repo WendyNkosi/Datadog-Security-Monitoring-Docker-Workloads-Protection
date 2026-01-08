@@ -38,6 +38,7 @@ RUN apt-get update -y \
         libasound2 \
         libxtst6 \
         xauth \
+        dos2unix \
         xvfb \
     && curl -fsSL https://deb.nodesource.com/setup_${NODE_JS_VERSION}.x | bash - \
     && apt-get install -y --no-install-recommends nodejs \
@@ -100,6 +101,7 @@ RUN apt-get update -y \
 
 COPY start.sh .
 RUN chmod +x start.sh
+    && dos2unix start.sh
 
 USER runner
 
