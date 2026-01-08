@@ -58,7 +58,7 @@ RUN if [ "$(uname -m)" = "x86_64" ]; then \
     else \
       export CURRENT_ARCH="arm64" \
       && export AWS_CLI_ARCH="aarch64"; \
-      fi \
+    fi \
     curl -fsSL https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${CURRENT_ARCH}.zip -o /tmp/terraform.zip \
     && unzip /tmp/terraform.zip -d /tmp \
     && mv /tmp/terraform /usr/local/bin/ \
