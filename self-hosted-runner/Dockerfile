@@ -6,9 +6,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 ARG DEBCONF_NONINTERACTIVE_SEEN=true
 ARG NODE_JS_VERSION=16
 
-RUN echo "tzdata tzdata/Areas select Europe\ntzdata tzdata/Zones/Europe select Berlin" > /preseed.txt \
-    && debconf-set-selections /preseed.txt \
-    && apt-get update -y \
+RUN apt-get update -y \
     && apt-get install -y --no-install-recommends \
         curl \
         jq \
@@ -52,7 +50,7 @@ RUN echo "tzdata tzdata/Areas select Europe\ntzdata tzdata/Zones/Europe select B
 
 FROM base as cloud-base
 
-ARG VAULT_VERSION=1.8.5
+ARG TERRAFORM_VERSION=1.9.8
 
 RUN if [ "$(uname -m)" = "x86_64" ]; then \
       export CURRENT_ARCH="amd64" \
@@ -60,11 +58,12 @@ RUN if [ "$(uname -m)" = "x86_64" ]; then \
     else \
       export CURRENT_ARCH="arm64" \
       && export AWS_CLI_ARCH="aarch64"; \
-    fi \
-    && curl -o vault.zip https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_${CURRENT_ARCH}.zip \
-    && unzip vault.zip \
-    && mv vault /usr/local/bin \
-    && rm vault.zip \
+      fi \
+    curl -fsSL https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${CURRENT_ARCH}.zip -o /tmp/terraform.zip \
+    && unzip /tmp/terraform.zip -d /tmp \
+    && mv /tmp/terraform /usr/local/bin/ \
+    && rm -rf /tmp/* \
+    && terraform version
     && curl https://awscli.amazonaws.com/awscli-exe-linux-${AWS_CLI_ARCH}.zip -o awscliv2.zip \
     && unzip awscliv2.zip \
     && ./aws/install \
@@ -72,6 +71,8 @@ RUN if [ "$(uname -m)" = "x86_64" ]; then \
     && aws --version
 
 FROM cloud-base as runner-base
+
+RUN terraform -install-autocomplete
 
 ARG RUNNER_VERSION=2.295.0
 ARG DEBIAN_FRONTEND=noninteractive
