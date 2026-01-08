@@ -1,8 +1,5 @@
-
 #!/bin/bash
-
 set -eoux
-
 echo "GHA Runner Startup"
 
 export GITHUB_PERSONAL_TOKEN=${GITHUB_PERSONAL_TOKEN:?"a token is needed to start the runner"}
