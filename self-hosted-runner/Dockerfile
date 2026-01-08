@@ -52,7 +52,8 @@ FROM base as cloud-base
 
 ARG TERRAFORM_VERSION=1.9.8
 
-RUN if [ "$(uname -m)" = "x86_64" ]; then \
+RUN set -eux; \
+    if [ "$(uname -m)" = "x86_64" ]; then \
       export CURRENT_ARCH="amd64" \
       && export AWS_CLI_ARCH="x86_64"; \
     else \
