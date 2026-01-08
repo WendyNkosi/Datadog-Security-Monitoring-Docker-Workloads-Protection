@@ -100,7 +100,7 @@ RUN apt-get update -y \
     && rm -rf /var/lib/apt/lists/*
 
 COPY start.sh .
-RUN chmod +x start.sh
+RUN chmod +x start.sh \
     && dos2unix start.sh
 
 USER runner
