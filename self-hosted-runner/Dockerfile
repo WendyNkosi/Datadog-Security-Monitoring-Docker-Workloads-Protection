@@ -58,7 +58,7 @@ RUN if [ "$(uname -m)" = "x86_64" ]; then \
     else \
       export CURRENT_ARCH="arm64" \
       && export AWS_CLI_ARCH="aarch64"; \
-    fi && \
+    fi \
     curl -fsSL https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${CURRENT_ARCH}.zip -o /tmp/terraform.zip \
     && unzip /tmp/terraform.zip -d /tmp \
     && mv /tmp/terraform /usr/local/bin/ \
@@ -85,7 +85,7 @@ RUN apt-get update -y \
     else \
         export CURRENT_ARCH="arm64" \
         && curl -o actions-runner.tar.gz -sL https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-${CURRENT_ARCH}-${RUNNER_VERSION}.tar.gz; \
-    fi && \
+    fi \
     && useradd -m -d /home/runner -b /home/runner -U runner \
     && echo "runner ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers \
     && mkdir -p /opt/hostedtoolcache \
