@@ -2,12 +2,40 @@ FROM ubuntu:latest
 # Avoid prompts from apt
 ENV DEBIAN_FRONTEND=noninteractive
 # Install comprehensive dependencies
-RUN apt-get update && apt-get install -y \\
-    curl wget git jq build-essential \\
-    libssl-dev libffi-dev python3 python3-pip \\
-    nodejs npm docker.io unzip tar gzip \\
-    ca-certificates gnupg sudo openssl \\
-    postgresql-client && rm -rf /var/lib/apt/lists/*
+RUN apt-get update -y \
+   && apt-get install -y --no-install-recommends\
+   curl \
+    jq \
+    ca-certificates \
+    gnupg \
+    lsb-release \
+    software-properties-common \
+    apt-utils \
+    apt-transport-https \
+    build-essential \
+    python3 \
+    python3-pip \
+    postgresql-client \
+    git \
+    ssh \
+    zip \
+    unzip \ 
+    wget \
+    file \
+    libicu-dev \
+    rsync \
+    libgtk2.0-0 \
+    libgtk-3-0 \
+    libgbm-dev \
+    libnotify-dev \
+    libgconf-2-4 \
+    libnss3 \
+    libxss1 \
+    libasound2 \
+    libxtst6 \
+    xauth \
+    xvfb \
+    && rm -rf /var/lib/apt/lists/*
 # Install AWS CLI v2
 RUN wget -O "awscliv2.zip" "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" \\
     && unzip awscliv2.zip && ./aws/install \\
