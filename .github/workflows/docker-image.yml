@@ -93,7 +93,7 @@ jobs:
     - name: Build and push the self hosted runner image to dockerhub
       uses: docker/build-push-action@v5
       with:
-       context: ./self-hosted-runner
+       context: self-hosted-runner
        file: ./Dockerfile
        push: true
        tags: wendynkosi/todo-api:runner
