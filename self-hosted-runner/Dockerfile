@@ -85,8 +85,7 @@ RUN apt-get update -y \
     && cat ./bin/installdependencies.sh \
     && ./bin/installdependencies.sh \
     && rm -rf /var/lib/apt/lists/*
-
-//COPY health-check /usr/bin/
+    
 COPY start.sh .
 
 USER runner
