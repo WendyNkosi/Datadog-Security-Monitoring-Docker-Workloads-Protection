@@ -1,13 +1,7 @@
 
 #!/bin/bash
 
-set -e
-
-DEBUG=${DEBUG:-"0"}
-
-if [ "${DEBUG}" = "1" ]; then
-  set -x
-fi
+set -eoux
 
 echo "GHA Runner Startup"
 
