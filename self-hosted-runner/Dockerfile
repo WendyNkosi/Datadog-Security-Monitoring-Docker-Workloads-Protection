@@ -54,22 +54,22 @@ ARG TERRAFORM_VERSION=1.9.8
 
 RUN set -eux; \
     if [ "$(uname -m)" = "x86_64" ]; then \
-      export CURRENT_ARCH="amd64" \
-      && export AWS_CLI_ARCH="x86_64"; \
+      export CURRENT_ARCH="amd64"; \
+      export AWS_CLI_ARCH="x86_64"; \
     else \
-      export CURRENT_ARCH="arm64" \
-      && export AWS_CLI_ARCH="aarch64"; \
-    fi \
-    curl -fsSL https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${CURRENT_ARCH}.zip -o /tmp/terraform.zip \
-    && unzip /tmp/terraform.zip -d /tmp \
-    && mv /tmp/terraform /usr/local/bin/ \
-    && rm -rf /tmp/* \
-    && terraform version \
-    && curl https://awscli.amazonaws.com/awscli-exe-linux-${AWS_CLI_ARCH}.zip -o awscliv2.zip \
-    && unzip awscliv2.zip \
-    && ./aws/install \
-    && rm -rf ./aws awscliv2.zip \
-    && aws --version
+      export CURRENT_ARCH="arm64"; \
+      export AWS_CLI_ARCH="aarch64"; \
+    fi; \
+    curl -fsSL https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${CURRENT_ARCH}.zip -o /tmp/terraform.zip; \
+    unzip /tmp/terraform.zip -d /tmp; \
+    mv /tmp/terraform /usr/local/bin/; \
+    rm -rf /tmp/*; \
+    terraform version; \
+    curl https://awscli.amazonaws.com/awscli-exe-linux-${AWS_CLI_ARCH}.zip -o awscliv2.zip; \
+    unzip awscliv2.zip; \
+    ./aws/install; \
+    rm -rf ./aws awscliv2.zip; \
+    aws --version
 
 FROM cloud-base as runner-base
 
