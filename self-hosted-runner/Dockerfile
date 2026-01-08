@@ -63,7 +63,7 @@ RUN if [ "$(uname -m)" = "x86_64" ]; then \
     && unzip /tmp/terraform.zip -d /tmp \
     && mv /tmp/terraform /usr/local/bin/ \
     && rm -rf /tmp/* \
-    && terraform version
+    && terraform version \
     && curl https://awscli.amazonaws.com/awscli-exe-linux-${AWS_CLI_ARCH}.zip -o awscliv2.zip \
     && unzip awscliv2.zip \
     && ./aws/install \
