@@ -37,20 +37,20 @@ RUN apt-get update -y \
     xvfb \
     && rm -rf /var/lib/apt/lists/*
 # Install AWS CLI v2
-RUN wget -O "awscliv2.zip" "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" \\
-    && unzip awscliv2.zip && ./aws/install \\
+RUN wget -O "awscliv2.zip" "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" \
+    && unzip awscliv2.zip && ./aws/install \
     && rm -rf awscliv2.zip aws
 # Create runner user with Docker access
-RUN useradd -m -s /bin/bash runner && \\
-    usermod -aG docker runner && \\
+RUN useradd -m -s /bin/bash runner && \
+    usermod -aG docker runner && \
     echo 'runner ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 # Download GitHub Actions runner (multi-architecture support)
 ARG RUNNER_VERSION=2.330.0
-RUN ARCH=$(uname -m) && \\
-    if [ "$ARCH" = "aarch64" ]; then RUNNER_ARCH="arm64"; \\
-    else RUNNER_ARCH="x64"; fi && \\
-    wget -O actions-runner.tar.gz \\
-    https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-${RUNNER_ARCH}-${RUNNER_VERSION}.tar.gz \\
+RUN ARCH=$(uname -m) && \
+    if [ "$ARCH" = "aarch64" ]; then RUNNER_ARCH="arm64"; \
+    else RUNNER_ARCH="x64"; fi && \
+    wget -O actions-runner.tar.gz \
+    https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-${RUNNER_ARCH}-${RUNNER_VERSION}.tar.gz \
     && tar xzf actions-runner.tar.gz && rm actions-runner.tar.gz
 COPY multi-runner.sh /home/runner/multi-runner.sh
 
