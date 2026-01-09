@@ -80,6 +80,7 @@ ARG RUNNER_VERSION=2.295.0
 ARG DEBIAN_FRONTEND=noninteractive
 ARG DEBCONF_NONINTERACTIVE_SEEN=true
 ENV GITHUB_PERSONAL_TOKEN=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
+ENV GITHUB_REPOSITORY=https://github.com/WendyNkosi/Datadog-Security-Monitoring-Docker-Workloads-Protection
 
 RUN apt-get update -y \
     && apt-get install --no-install-recommends -y sudo \
