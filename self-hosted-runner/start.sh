@@ -16,16 +16,6 @@ else
   registration_url="https://github.com/${GITHUB_ORG}"
 fi
 
-if [ -f "$DESTINATION/cache.tar.gz" ]; then
-  echo "rsync shared cache"
-  echo "use chroot = no" >> rsyncd.conf
-  TMPDIR="$HOME/$(echo $(($RANDOM * $RANDOM)) | base64)"
-  mkdir -p $TMPDIR
-  rsync --rsync-path="rsync --config=rsyncd.conf" --chown=runner:runner -T "$TMPDIR" $DESTINATION/cache.tar.gz $HOME/cache.tar.gz || echo "an error occured, skipping rsync"
-  echo "untar shared cache"
-  tar -xf $HOME/cache.tar.gz || echo "an error occured, skipping untar of the cache"
-fi
-
 #Creating a runner registration token
 get_token() {
   payload=$(curl -sX POST -H "Authorization: token ${GITHUB_PERSONAL_TOKEN}" "${auth_url}")
@@ -45,19 +35,7 @@ export HOME_SAVE=$HOME
 #Removing old runner config
 remove_runner() {
   ec=$?
-
   cd $HOME_SAVE
-
-  echo "create tarball out of the cache folder ($HOME_SAVE)"
-  tar -C $HOME_SAVE -czf cache.tar.gz cache || echo "an error occured, not creating the tarball"
-  echo "rsync shared cache"
-  echo "use chroot = no" > rsyncd.conf
-  TMPDIR="$DESTINATION/$(echo $(($RANDOM * $RANDOM)) | base64)"
-  mkdir -p $TMPDIR
-  rsync --rsync-path="rsync --config=rsyncd.conf" --bwlimit=10000 -E --chown=runner:runner --human-readable -T $TMPDIR $HOME/cache.tar.gz $DESTINATION/cache.tar.gz || echo "an error occured, not uploading the cache"
-
-  rm -rf $TMPDIR
-
   remove_token=$(curl -sX POST -H "authorization: token ${GITHUB_PERSONAL_TOKEN}" -H "accept: application/vnd.github.everest-preview+json" "${remove_token_url}" | jq -r '.token')
   ./config.sh remove --token "$(echo $remove_token)"
 
