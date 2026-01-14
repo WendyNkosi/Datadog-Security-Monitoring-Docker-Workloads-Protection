@@ -75,9 +75,6 @@ RUN set -eux; \
 FROM cloud-base as runner-base
 RUN npm install -g @datadog/datadog-ci
 
-ENV PATH="$PATH:/home/runner/.dotnet/tools"
-RUN dotnet tool update -g dd-trace
-
 RUN terraform -install-autocomplete
 ARG DOTNET_DIR=/opt/hostedtoolcache/dotnet
 RUN mkdir -p ${DOTNET_DIR} && \
@@ -88,9 +85,13 @@ RUN mkdir -p ${DOTNET_DIR} && \
     /tmp/dotnet-install.sh --version 8.0.204 --install-dir ${DOTNET_DIR} && \
     /tmp/dotnet-install.sh --version 10.0.100 --install-dir ${DOTNET_DIR} && \
     rm /tmp/dotnet-install.sh
-
+    
 ENV DOTNET_ROOT=${DOTNET_DIR}
 ENV PATH="${DOTNET_DIR}:${DOTNET_DIR}/tools:$PATH"
+
+ENV PATH="$PATH:/home/runner/.dotnet/tools"
+RUN dotnet tool update -g dd-trace
+
 ARG RUNNER_VERSION=2.330.0
 ARG DEBIAN_FRONTEND=noninteractive
 ARG DEBCONF_NONINTERACTIVE_SEEN=true
