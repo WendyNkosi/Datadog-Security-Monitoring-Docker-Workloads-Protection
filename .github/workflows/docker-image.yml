@@ -18,7 +18,11 @@ jobs:
     - name: Run a script
       run: echo "Hello, world!"
 
-    - name: Setup .NET
+    - name: Setup .NET with sudo
+      run: |
+        sudo mkdir -p /usr/share/dotnet
+        sudo chown $USER /usr/share/dotnet
+    - name: Install .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '10.0.x'
