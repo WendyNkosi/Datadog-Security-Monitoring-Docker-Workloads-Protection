@@ -9,6 +9,9 @@ ARG NODE_JS_VERSION=24
 RUN apt-get update -y \
     && apt-get install -y --no-install-recommends \
         curl \
+        python3 \
+        python3-pip \
+        python3-venv \
         jq \
         ca-certificates \
         gnupg \
@@ -91,6 +94,7 @@ ENV PATH="${DOTNET_DIR}:${DOTNET_DIR}/tools:$PATH"
 
 ENV PATH="$PATH:/home/runner/.dotnet/tools"
 RUN dotnet tool update -g dd-trace
+RUN dotnet tool install -g dotnet-reportgenerator-globaltool
 
 ARG RUNNER_VERSION=2.330.0
 ARG DEBIAN_FRONTEND=noninteractive
