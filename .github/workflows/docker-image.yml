@@ -10,93 +10,97 @@ jobs:
 
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: [linux, ecs]
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Run a script
+      run: echo "Hello, world!"
     
-    - name: Login to dockerhub
-      uses: docker/login-action@v3
-      with:
-       username: ${{ secrets.DOCKER_USERNAME }}
-       password: ${{ secrets.DOCKER_TOKEN }}
+    
+#     - name: Login to dockerhub
+#       uses: docker/login-action@v3
+#       with:
+#        username: ${{ secrets.DOCKER_USERNAME }}
+#        password: ${{ secrets.DOCKER_TOKEN }}
       
-    - name: Build and push the minimal debian image to dockerhub
-      uses: docker/build-push-action@v5
-      with:
-       context: .
-       file: ./deb-minimal.Dockerfile
-       push: true
-       tags: wendynkosi/todo-api:deb-minimal
+#     - name: Build and push the minimal debian image to dockerhub
+#       uses: docker/build-push-action@v5
+#       with:
+#        context: .
+#        file: ./deb-minimal.Dockerfile
+#        push: true
+#        tags: wendynkosi/todo-api:deb-minimal
 
-    - name: Build and push the traced debian image to dockerhub
-      uses: docker/build-push-action@v5
-      with:
-       context: .
-       file: ./deb.Dockerfile
-       push: true
-       tags: wendynkosi/todo-api:deb-root-user
+#     - name: Build and push the traced debian image to dockerhub
+#       uses: docker/build-push-action@v5
+#       with:
+#        context: .
+#        file: ./deb.Dockerfile
+#        push: true
+#        tags: wendynkosi/todo-api:deb-root-user
 
-    - name: Build and push the minimal ubuntu image to dockerhub
-      uses: docker/build-push-action@v5
-      with:
-       context: .
-       file: ./ubuntu-minimal.Dockerfile
-       push: true
-       tags: wendynkosi/todo-api:ubuntu-minimal
+#     - name: Build and push the minimal ubuntu image to dockerhub
+#       uses: docker/build-push-action@v5
+#       with:
+#        context: .
+#        file: ./ubuntu-minimal.Dockerfile
+#        push: true
+#        tags: wendynkosi/todo-api:ubuntu-minimal
 
-    - name: Build and push the traced ubuntu image to dockerhub
-      uses: docker/build-push-action@v5
-      with:
-       context: .
-       file: ./ubuntu.Dockerfile
-       push: true
-       tags: wendynkosi/todo-api:ubuntu-traced
+#     - name: Build and push the traced ubuntu image to dockerhub
+#       uses: docker/build-push-action@v5
+#       with:
+#        context: .
+#        file: ./ubuntu.Dockerfile
+#        push: true
+#        tags: wendynkosi/todo-api:ubuntu-traced
 
 
-    - name: Build and push the minimal alpine image to dockerhub
-      uses: docker/build-push-action@v5
-      with:
-       context: .
-       file: ./alp-minimal.Dockerfile
-       push: true
-       tags: wendynkosi/todo-api:alpine-minimal
+#     - name: Build and push the minimal alpine image to dockerhub
+#       uses: docker/build-push-action@v5
+#       with:
+#        context: .
+#        file: ./alp-minimal.Dockerfile
+#        push: true
+#        tags: wendynkosi/todo-api:alpine-minimal
 
-    - name: Build and push the traced alpine image to dockerhub
-      uses: docker/build-push-action@v5
-      with:
-       context: .
-       file: ./alp.Dockerfile
-       push: true
-       tags: wendynkosi/todo-api:alpine-traced
+#     - name: Build and push the traced alpine image to dockerhub
+#       uses: docker/build-push-action@v5
+#       with:
+#        context: .
+#        file: ./alp.Dockerfile
+#        push: true
+#        tags: wendynkosi/todo-api:alpine-traced
 
-#set dotnet for building dll file w/o sdk
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
+# #set dotnet for building dll file w/o sdk
+#     - name: Setup .NET
+#       uses: actions/setup-dotnet@v4
+#       with:
+#         dotnet-version: 8.0.x
         
-# Restore, build, and publish
-    - name: Publish .NET app
-      run: dotnet publish ./TodoApi.csproj -c Release -o ./publish
+# # Restore, build, and publish
+#     - name: Publish .NET app
+#       run: dotnet publish ./TodoApi.csproj -c Release -o ./publish
       
-    - name: Build and push the runtime debian image to dockerhub
-      uses: docker/build-push-action@v5
-      with:
-       context: .
-       file: ./deb-runtime.Dockerfile
-       push: true
-       tags: wendynkosi/todo-api:deb-nonroot-user
+#     - name: Build and push the runtime debian image to dockerhub
+#       uses: docker/build-push-action@v5
+#       with:
+#        context: .
+#        file: ./deb-runtime.Dockerfile
+#        push: true
+#        tags: wendynkosi/todo-api:deb-nonroot-user
 
 
-# Build and push self-hosted runner image  
-    - name: Build and push the self hosted runner image to dockerhub
-      uses: docker/build-push-action@v5
-      with:
-       context: self-hosted-runner
-       file: self-hosted-runner/Dockerfile
-       push: true
-       tags: wendynkosi/todo-api:runner
+# # Build and push self-hosted runner image  
+#     - name: Build and push the self hosted runner image to dockerhub
+#       uses: docker/build-push-action@v5
+#       with:
+#        context: self-hosted-runner
+#        file: self-hosted-runner/Dockerfile
+#        push: true
+#        tags: wendynkosi/todo-api:runner
 
     
     
