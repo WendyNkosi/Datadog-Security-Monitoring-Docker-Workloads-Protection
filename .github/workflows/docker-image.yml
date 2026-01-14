@@ -10,7 +10,7 @@ jobs:
 
   build:
 
-    runs-on: [linux, ecs]
+    runs-on: self-hosted
 
     steps:
     - name: Checkout code
