@@ -76,7 +76,7 @@ FROM cloud-base as runner-base
 
 RUN terraform -install-autocomplete
 
-ARG RUNNER_VERSION=2.295.0
+ARG RUNNER_VERSION=2.330.0
 ARG DEBIAN_FRONTEND=noninteractive
 ARG DEBCONF_NONINTERACTIVE_SEEN=true
 ENV GITHUB_REPOSITORY=Datadog-Security-Monitoring-Docker-Workloads-Protection
