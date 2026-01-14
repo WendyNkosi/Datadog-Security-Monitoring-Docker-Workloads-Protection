@@ -83,7 +83,6 @@ ENV GITHUB_REPOSITORY=""
 ENV GITHUB_ORG=WendyNkosi
 ENV DESTINATION=runner-cache-server:/var/cache
 ENV CONTAINER_NAME=gha_runner
-ENV RUNNER_GROUP=Default
 ENV RUNNER_LABELS="linux,x64,ecs"
 
 RUN apt-get update -y \
