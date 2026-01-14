@@ -30,6 +30,15 @@ jobs:
     - name: List all .NET runtimes
       run: dotnet --list-runtimes
 
+    - name: Restore dependencies
+      run: dotnet restore ./TodoApi.sln
+
+    - name: Build solution
+      run: dotnet build ./TodoApi.sln --configuration Release --no-restore
+
+
+      
+
 
 #     - name: Build and push the traced debian image to dockerhub
 #       uses: docker/build-push-action@v5
