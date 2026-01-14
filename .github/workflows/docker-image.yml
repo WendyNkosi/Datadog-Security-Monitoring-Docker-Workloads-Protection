@@ -25,8 +25,12 @@ jobs:
        username: ${{ secrets.DOCKER_USERNAME }}
        password: ${{ secrets.DOCKER_TOKEN }}
       
-    - name: Check .NET
-      run: dotnet --version
+    - name: List all .NET SDKs
+      run: dotnet --list-sdks
+
+    - name: List all .NET runtimes
+      run: dotnet --list-runtimes
+
 
 #     - name: Build and push the traced debian image to dockerhub
 #       uses: docker/build-push-action@v5
