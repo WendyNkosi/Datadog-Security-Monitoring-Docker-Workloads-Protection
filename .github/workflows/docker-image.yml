@@ -18,15 +18,12 @@ jobs:
     - name: Run a script
       run: echo "Hello, world!"
 
-    - name: Setup .NET with sudo
-      run: |
-        sudo mkdir -p /usr/share/dotnet
-        sudo chown $USER /usr/share/dotnet
-    - name: Install .NET
+    - name: Setup .NET in home directory
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '10.0.x'
-    
+        installation-path: $HOME/.dotnet
+
     - name: Login to dockerhub
       uses: docker/login-action@v3
       with:
