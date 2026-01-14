@@ -44,7 +44,11 @@ remove_runner() {
 }
 
 full_id=$(curl -sSL "$(echo $ECS_CONTAINER_METADATA_URI_V4)/task" | jq --arg ARG ${CONTAINER_NAME} -r '.Containers[] | select(.Name == $ARG) | .DockerId')
+# Get container ID or fallback to random
 CONTAINER_ID=${full_id:0:12}
+if [ -z "$CONTAINER_ID" ]; then
+    CONTAINER_ID="$(date +%s)-$RANDOM"
+fi
 
 # prevent error related to name length
 RUNNER_NAME=$(echo "nim-${RUNNER_GROUP}-$(uname -m)-${CONTAINER_ID}" | sed 's/\.compute\.internal//g')
