@@ -79,8 +79,7 @@ RUN terraform -install-autocomplete
 ARG RUNNER_VERSION=2.295.0
 ARG DEBIAN_FRONTEND=noninteractive
 ARG DEBCONF_NONINTERACTIVE_SEEN=true
-ENV GITHUB_PERSONAL_TOKEN=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
-ENV GITHUB_REPOSITORY=https://github.com/WendyNkosi/Datadog-Security-Monitoring-Docker-Workloads-Protection
+ENV GITHUB_REPOSITORY=Datadog-Security-Monitoring-Docker-Workloads-Protection
 ENV GITHUB_ORG=WendyNkosi
 ENV DESTINATION=runner-cache-server:/var/cache
 ENV CONTAINER_NAME=gha_runner
