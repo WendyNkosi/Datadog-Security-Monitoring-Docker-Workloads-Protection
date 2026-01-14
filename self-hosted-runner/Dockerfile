@@ -73,6 +73,10 @@ RUN set -eux; \
     aws --version
 
 FROM cloud-base as runner-base
+RUN npm install -g @datadog/datadog-ci
+
+ENV PATH="$PATH:/home/runner/.dotnet/tools"
+RUN dotnet tool update -g dd-trace
 
 RUN terraform -install-autocomplete
 ARG DOTNET_DIR=/opt/hostedtoolcache/dotnet
