@@ -83,6 +83,7 @@ ENV GITHUB_PERSONAL_TOKEN=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
 ENV GITHUB_REPOSITORY=https://github.com/WendyNkosi/Datadog-Security-Monitoring-Docker-Workloads-Protection
 ENV GITHUB_ORG=WendyNkosi
 ENV DESTINATION=runner-cache-server:/var/cache
+ENV CONTAINER_NAME=gha_runner
 
 RUN apt-get update -y \
     && apt-get install --no-install-recommends -y sudo \
