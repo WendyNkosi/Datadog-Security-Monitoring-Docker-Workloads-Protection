@@ -79,7 +79,6 @@ RUN terraform -install-autocomplete
 ARG RUNNER_VERSION=2.330.0
 ARG DEBIAN_FRONTEND=noninteractive
 ARG DEBCONF_NONINTERACTIVE_SEEN=true
-ENV GITHUB_REPOSITORY=""
 ENV GITHUB_ORG=WendyNkosi
 ENV DESTINATION=runner-cache-server:/var/cache
 ENV CONTAINER_NAME=gha_runner
