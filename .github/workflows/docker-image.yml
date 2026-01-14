@@ -25,13 +25,13 @@ jobs:
        username: ${{ secrets.DOCKER_USERNAME }}
        password: ${{ secrets.DOCKER_TOKEN }}
       
-#     - name: Build and push the minimal debian image to dockerhub
-#       uses: docker/build-push-action@v5
-#       with:
-#        context: .
-#        file: ./deb-minimal.Dockerfile
-#        push: true
-#        tags: wendynkosi/todo-api:deb-minimal
+    - name: Build and push the minimal debian image to dockerhub
+      uses: docker/build-push-action@v5
+      with:
+       context: .
+       file: ./deb-minimal.Dockerfile
+       push: true
+       tags: wendynkosi/todo-api:deb-minimal
 
 #     - name: Build and push the traced debian image to dockerhub
 #       uses: docker/build-push-action@v5
