@@ -84,6 +84,7 @@ ENV GITHUB_REPOSITORY=https://github.com/WendyNkosi/Datadog-Security-Monitoring-
 ENV GITHUB_ORG=WendyNkosi
 ENV DESTINATION=runner-cache-server:/var/cache
 ENV CONTAINER_NAME=gha_runner
+ENV RUNNER_GROUP=Default
 
 RUN apt-get update -y \
     && apt-get install --no-install-recommends -y sudo \
