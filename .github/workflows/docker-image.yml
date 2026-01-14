@@ -24,11 +24,11 @@ jobs:
        username: ${{ secrets.DOCKER_USERNAME }}
        password: ${{ secrets.DOCKER_TOKEN }}
       
-    # - name: List all .NET SDKs
-    #   run: dotnet --list-sdks
+    - name: List all .NET SDKs
+      run: dotnet --list-sdks
 
-    # - name: List all .NET runtimes
-    #   run: dotnet --list-runtimes
+    - name: List all .NET runtimes
+      run: dotnet --list-runtimes
 
 
 #     - name: Build and push the traced debian image to dockerhub
@@ -91,14 +91,14 @@ jobs:
 #        tags: wendynkosi/todo-api:deb-nonroot-user
 
 
-# Build and push self-hosted runner image  
-    - name: Build and push the self hosted runner image to dockerhub
-      uses: docker/build-push-action@v5
-      with:
-       context: self-hosted-runner
-       file: self-hosted-runner/Dockerfile
-       push: true
-       tags: wendynkosi/todo-api:runner
+# # Build and push self-hosted runner image  
+#     - name: Build and push the self hosted runner image to dockerhub
+#       uses: docker/build-push-action@v5
+#       with:
+#        context: self-hosted-runner
+#        file: self-hosted-runner/Dockerfile
+#        push: true
+#        tags: wendynkosi/todo-api:runner
 
     
     
