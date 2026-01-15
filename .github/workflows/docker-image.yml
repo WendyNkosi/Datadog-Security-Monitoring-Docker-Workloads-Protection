@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
     - name: Checkout code
@@ -21,17 +21,17 @@ jobs:
        username: ${{ secrets.DOCKER_USERNAME }}
        password: ${{ secrets.DOCKER_TOKEN }}
       
-    # - name: List all .NET SDKs
-    #   run: dotnet --list-sdks
+    - name: List all .NET SDKs
+      run: dotnet --list-sdks
 
-    # - name: List all .NET runtimes
-    #   run: dotnet --list-runtimes
+    - name: List all .NET runtimes
+      run: dotnet --list-runtimes
 
-    # - name: Restore dependencies
-    #   run: dotnet restore ./TodoApi.sln
+    - name: Restore dependencies
+      run: dotnet restore ./TodoApi.sln
 
-    # - name: Build solution
-    #   run: dotnet build ./TodoApi.sln --configuration Release --no-restore
+    - name: Build solution
+      run: dotnet build ./TodoApi.sln --configuration Release --no-restore
 
 
       
@@ -97,14 +97,14 @@ jobs:
 #        tags: wendynkosi/todo-api:deb-nonroot-user
 
 
-# Build and push self-hosted runner image  
-    - name: Build and push the self hosted runner image to dockerhub
-      uses: docker/build-push-action@v5
-      with:
-       context: self-hosted-runner
-       file: self-hosted-runner/Dockerfile
-       push: true
-       tags: wendynkosi/todo-api:runner
+# # Build and push self-hosted runner image  
+#     - name: Build and push the self hosted runner image to dockerhub
+#       uses: docker/build-push-action@v5
+#       with:
+#        context: self-hosted-runner
+#        file: self-hosted-runner/Dockerfile
+#        push: true
+#        tags: wendynkosi/todo-api:runner
 
     
     
