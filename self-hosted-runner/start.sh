@@ -1,66 +1,67 @@
 #!/bin/bash
-set -eoux
+set -eou pipefail
 echo "GHA Runner Startup"
 
-export GITHUB_PERSONAL_TOKEN=${GITHUB_PERSONAL_TOKEN:?"a token is needed to start the runner"}
+# Require GitHub token
+export GITHUB_PERSONAL_TOKEN=${GITHUB_PERSONAL_TOKEN:?"A token is needed to start the runner"}
 
-#Runner token level for the organization or a particular repository only
-if [ -n "${GITHUB_REPOSITORY}" ]
-then
+# Determine URLs based on repo vs org runner
+if [ -n "${GITHUB_REPOSITORY:-}" ]; then
   auth_url="https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPOSITORY}/actions/runners/registration-token"
-  remove_token_url="https://api.github.com/repos/${GITHUB_ORG}/actions/runners/remove-token"
   registration_url="https://github.com/${GITHUB_ORG}/${GITHUB_REPOSITORY}"
 else
   auth_url="https://api.github.com/orgs/${GITHUB_ORG}/actions/runners/registration-token"
-  remove_token_url="https://api.github.com/orgs/${GITHUB_ORG}/actions/runners/remove-token"
   registration_url="https://github.com/${GITHUB_ORG}"
 fi
 
-#Creating a runner registration token
+# Function to get ephemeral runner token
 get_token() {
   payload=$(curl -sX POST -H "Authorization: token ${GITHUB_PERSONAL_TOKEN}" "${auth_url}")
-  runner_token=$(echo "${payload}" | jq .token --raw-output)
-
-  if [ "${runner_token}" = "null" ]
-  then
-    echo "${payload}"
+  runner_token=$(echo "${payload}" | jq -r .token)
+  if [ "${runner_token}" = "null" ]; then
+    echo "Failed to get runner token:" >&2
+    echo "${payload}" >&2
     exit 1
   fi
-
   echo "${runner_token}"
 }
 
-export HOME_SAVE=$HOME
-
-#Removing old runner config
-remove_runner() {
-  ec=$?
-  cd $HOME_SAVE
-  remove_token=$(curl -sX POST -H "authorization: token ${GITHUB_PERSONAL_TOKEN}" -H "accept: application/vnd.github.everest-preview+json" "${remove_token_url}" | jq -r '.token')
-  ./config.sh remove --token "$(echo $remove_token)"
-
-  # 799 means all good in nimbus language
-  exit 799
-}
-
-full_id=$(curl -sSL "$(echo $ECS_CONTAINER_METADATA_URI_V4)/task" | jq --arg ARG ${CONTAINER_NAME} -r '.Containers[] | select(.Name == $ARG) | .DockerId')
-# Get container ID or fallback to random
-CONTAINER_ID=${full_id:0:12}
+# Generate unique runner name per container
+CONTAINER_ID=$(curl -sSL "${ECS_CONTAINER_METADATA_URI_V4}/task" \
+  | jq -r --arg NAME "${CONTAINER_NAME}" '.Containers[] | select(.Name==$NAME) | .DockerId')
+CONTAINER_ID=${CONTAINER_ID:0:12}
 if [ -z "$CONTAINER_ID" ]; then
     CONTAINER_ID="$(date +%s)-$RANDOM"
 fi
 
-# prevent error related to name length
-RUNNER_NAME=$(echo "nim-${RUNNER_GROUP}-$(uname -m)-${CONTAINER_ID}" | sed 's/\.compute\.internal//g')
+RUNNER_NAME="gha-${RUNNER_GROUP}-$(uname -m)-${CONTAINER_ID}"
 
-if [ -n "${GITHUB_REPOSITORY}" ]
-then
-  ./config.sh --unattended --ephemeral --name $RUNNER_NAME --labels "${RUNNER_LABELS}" --token "$(get_token)" --url "${registration_url}" --disableupdate
+# Register the runner
+if [ -n "${GITHUB_REPOSITORY:-}" ]; then
+  ./config.sh --unattended --ephemeral \
+    --name "$RUNNER_NAME" \
+    --labels "${RUNNER_LABELS}" \
+    --token "$(get_token)" \
+    --url "${registration_url}" \
+    --disableupdate
 else
-  ./config.sh --unattended --ephemeral --name $RUNNER_NAME --labels "${RUNNER_LABELS}" --token "$(get_token)" --url "${registration_url}" --runnergroup "${RUNNER_GROUP}" --disableupdate
+  ./config.sh --unattended --ephemeral \
+    --name "$RUNNER_NAME" \
+    --labels "${RUNNER_LABELS}" \
+    --token "$(get_token)" \
+    --url "${registration_url}" \
+    --runnergroup "${RUNNER_GROUP}" \
+    --disableupdate
 fi
 
-trap remove_runner SIGINT SIGTERM EXIT QUIT ERR
+# Trap to safely stop runner and kill any child processes
+cleanup() {
+  echo "Stopping runner..."
+  pkill -P $$ || true  # Kill any child processes
+  exit 0
+}
+trap cleanup SIGINT SIGTERM EXIT
 
-./bin/Runner.Listener warmup
-./run.sh
+# Run the listener for a single job then exit
+./bin/Runner.Listener run --once
+
