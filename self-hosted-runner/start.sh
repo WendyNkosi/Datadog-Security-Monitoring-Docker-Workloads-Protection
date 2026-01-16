@@ -58,10 +58,10 @@ fi
 cleanup() {
   echo "Stopping runner..."
   pkill -P $$ || true  # Kill any child processes
-  exit 0
 }
 trap cleanup SIGINT SIGTERM EXIT
 
 # Run the listener for a single job then exit
-./bin/Runner.Listener run --once
+./bin/Runner.Listener run --ephemeral
+
 
